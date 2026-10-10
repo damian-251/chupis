@@ -1,0 +1,38 @@
+name: Publicar en Neocities
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # permite lanzarlo a mano desde la pestaña Actions
+
+# Evita que dos publicaciones se pisen entre sí
+concurrency:
+  group: deploy-to-neocities
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Generar el sitio
+        run: npm run build
+
+      - name: Subir dist/ a Neocities
+        uses: bcomnes/deploy-to-neocities@v3
+        with:
+          api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
+          dist_dir: dist
+          # false: sube y actualiza archivos, pero no borra los que ya hay en Neocities
+          # (por ejemplo style.css o neocities.png). Cámbialo a true cuando quieras
+          # que Neocities quede idéntico a dist/.
+          cleanup: false
+          neocities_supporter: false
+          preview_before_deploy: true
