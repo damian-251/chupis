@@ -1,0 +1,23 @@
+# Sitio generado: se recrea con `node build.mjs`
+dist/
+
+# Informe generado por build.mjs
+IMAGENES-FALTANTES.txt
+
+# Dependencias, si algún día se añaden
+node_modules/
+
+# Registros y archivos locales
+*.log
+.env
+.env.*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp

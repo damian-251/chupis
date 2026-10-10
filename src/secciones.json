@@ -1,0 +1,362 @@
+[
+  {
+    "slug": "10pokemon",
+    "titulo": "10 Aniversario Pokémon",
+    "original": "10pokemon.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "PoKéMoN 10 Aniversario Página de Bienvenida Foro Esta sección estará como página principal hasta mañana. Bueno ya hace diez años que apareció el"
+  },
+  {
+    "slug": "noticias",
+    "titulo": "Noticias",
+    "original": "noticias.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "NOTICIAS NOTICIAS WEB : Instalado un contador avanzado y Web temporalmente privada. Se acaba de instalar en la Web un nuevo contador avanzado para"
+  },
+  {
+    "slug": "bienrecibidos",
+    "titulo": "Bienrecibidos",
+    "original": "bienrecibidos.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "BINEVENIDOS A ESTA PÁGINA QUE HEMOS CREADO DAMIÁN,ANA Y LUIS MIGUEL, ES DE DESCARGAS DE JUEGOS CHUPIS Y FORROS, ICONOS, ES LO MÁS CHUPI."
+  },
+  {
+    "slug": "lunnis",
+    "titulo": "Los Lunnis, salvadnos",
+    "original": "lunnis.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "Hola a la sección de los Lunnis Los Lunnis quieren irse de antena y nosotros se lo vamos a impedir, cuantos mas entreis en esta seccion, los lunnis"
+  },
+  {
+    "slug": "feos",
+    "titulo": "Feos",
+    "original": "feos.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "ERES UN POCO FEO Y MARRANO Vamos a demostrar que eres feo, hemos instalado una web cam en tu ordenador y te hemos hecho una foto, queda así:"
+  },
+  {
+    "slug": "animales",
+    "titulo": "Animales",
+    "original": "animales.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "¿QUÉ ANIMAL ERES? Aquí os mostramos 5 preguntas. con 4 respuestas. a: ¿Qué haces al llegar a casa? a)Me revuelco en el barro b)Me meo de risa con los"
+  },
+  {
+    "slug": "teletubbies",
+    "titulo": "Teletubbies",
+    "original": "teletubbies.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "TELETUBBIES Aquí tenemos a estos personajes, que acaban de salir ahora mismo en televisión, son una pasada y tiene un cierto aire de adultos. Así que"
+  },
+  {
+    "slug": "muerte",
+    "titulo": "La muerte",
+    "original": "muerte.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "LA MUERTE Veo que has entrado en esta sección, a pesar de la gran advertencia, perpárate para el miedo en estado puro: La muerte hasta sale en"
+  },
+  {
+    "slug": "diverfashion",
+    "titulo": "Diver_fashion",
+    "original": "diverFashion.html",
+    "fondo": "#00ccff",
+    "menu": true,
+    "descripcion": "B ienvenidos/as a mi página, aprovecho para anunciar la página de chupis, bueno, esta pagina es tope fashion, divertirse puede ser fashion.Esto es 1"
+  },
+  {
+    "slug": "comoserbrujoaen3pasos",
+    "titulo": "Como ser brujo/a en 3 pasos",
+    "original": "comoserbrujoaen3pasos.html",
+    "fondo": "#000099",
+    "menu": true,
+    "descripcion": "Hola, seguro que vosotros/as no teneis poderes sobre naturales,yo hos enseñare como hacer BRUJERIA. Tu, y tus AMIGOS o AMIGAS. (si el curso no"
+  },
+  {
+    "slug": "nintendods",
+    "titulo": "NINTENDO DS",
+    "original": "nintendoDs.html",
+    "fondo": "#333333",
+    "menu": true,
+    "descripcion": "Hola,que no sabes que es la NINTENDO DS? NINTENDO DS y NINTENDO DS LITE NINTENDO DS: NINTENDO DS LITE: AQUI TE DEJO CON UNAS IMAGENES DE ESTA"
+  },
+  {
+    "slug": "juguetes",
+    "titulo": "JUGUETES",
+    "original": "juguetes.html",
+    "fondo": "#33cc33",
+    "menu": true,
+    "descripcion": "SEGURO QUE TE CHIFLAN LOS JUGETES,PUES AQUí TIENES ALGUNOS LAMAR DE DIVERTIDOS."
+  },
+  {
+    "slug": "bumbbunnies",
+    "titulo": "Bumb Bunnies",
+    "original": "bumbbunnies.html",
+    "fondo": "#0033ff",
+    "menu": true,
+    "descripcion": "Bumb bunnies son los conejos simples, 1 serie de TV que arraso en Japón y ahora arrasará en España, esta serie es así, mirad mirad. Trata de unos"
+  },
+  {
+    "slug": "revolution",
+    "titulo": "Revolution",
+    "original": "revolution.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "REVOLUTION Aquí unas imágenes de la consola Revolution Bueno, los rumores eran falsos y la consola ya se presentó de forma oficial así que aquí"
+  },
+  {
+    "slug": "fotoscachondas",
+    "titulo": "Fotos Cachondas",
+    "original": "fotosCachondas.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "ja,ja,ja,con estas fotos me troncho."
+  },
+  {
+    "slug": "fotoscaseras",
+    "titulo": "Fotos Caseras",
+    "original": "fotosCaseras.html",
+    "fondo": "#ffff00",
+    "menu": true,
+    "descripcion": "PRÓXIMAMENTE"
+  },
+  {
+    "slug": "informatica",
+    "titulo": "informatica",
+    "original": "informatica.html",
+    "fondo": "#330033",
+    "menu": true,
+    "descripcion": "¿Estas harto/a de no saber ni j sobre informática,?aquí tenemos la solución, con el curso de internet en 5 pasos. materiales: (no pagamos el material"
+  },
+  {
+    "slug": "animalitosmuybonitos",
+    "titulo": "Animalitos muy bonitos",
+    "original": "animalitosmuybonitos.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "A que os gustan los animales, son muy bonitos y traen mucha alegria a las casas, hamsters, conejos, gatos, perros... TODO VALE. A que son 1 monada,"
+  },
+  {
+    "slug": "chistes",
+    "titulo": "Chistes",
+    "original": "chistes.html",
+    "fondo": "#cc00ff",
+    "menu": true,
+    "descripcion": "JE,JE, DICE 1 HOMBRE A SU MUJER: -CARIÑO,QUIERES MAS AL PERRO QUE A MI. Y LA MUJER RESPONDE: -PERO QUE DICES TONTO,HOS QUIERO A LOS 2 IGUAL. ESTO ES"
+  },
+  {
+    "slug": "podrido",
+    "titulo": "Podrido",
+    "original": "podrido.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "¿ El admnistrador (yo) no va ha poder crear muchas paginas por que se le ha roto el PC, tenemos a una admnistradora adjunta que va a crear paginas"
+  },
+  {
+    "slug": "windowsyventanas",
+    "titulo": "Windows y ventanas",
+    "original": "windowsyventanas.html",
+    "fondo": "#0000ff",
+    "menu": true,
+    "descripcion": "WINDOWS Y VENTANAS Aqu{i unas fotos de Windows y ventanas: Fotos de Ventanas: Y aqu{i las fotos de Windows:"
+  },
+  {
+    "slug": "comoaguantaraloshermanosasgrandesopequeosas",
+    "titulo": "Aguantar a los hermanos/as",
+    "original": "comoaguantaraloshermanosasgrandesopequeosas.html",
+    "fondo": "#660099",
+    "menu": true,
+    "descripcion": "Si quieres soportar a tu hermano/a, estas de suerte, porque en esta sección te enseñaremos a eso. -mamá, Lucía me ha pegado por entrar en su cuarto."
+  },
+  {
+    "slug": "vuelvoalaweb",
+    "titulo": "Vuelvo a la web",
+    "original": "vuelvoalaweb.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "El admnistrador vuelve Después de tanto tiempo, aquí vuelvo y haré que esta web sea la mejor, ya vereis. Aquí os dejo mi retorno:"
+  },
+  {
+    "slug": "colaboraconlaweb",
+    "titulo": "Colabora con la web",
+    "original": "colaboraconlaweb.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "Mensaje del Admnistrador: Si quieres colaborar con la web y eres participante puedes enviar el contenido y lo pondremos antes de que te mueras,"
+  },
+  {
+    "slug": "noentrar",
+    "titulo": "No entrar",
+    "original": "noentrar.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "PUES POR ENTRAR ESTA NOCHE TE MATARÉ"
+  },
+  {
+    "slug": "elazareltuntun",
+    "titulo": "El azar-el tun tun",
+    "original": "elazareltuntun.html",
+    "fondo": "#330066",
+    "menu": true,
+    "descripcion": "TUN-TUN, JUEGO AL AZAR. El tun-tun, nos saca de situaciones como el examen de \"cono\", pero ... ¿cuantas posibilidades tenemos de aprobar con este"
+  },
+  {
+    "slug": "comopasardefeoaaguapoa",
+    "titulo": "Como pasar de feo/a a guapo/a",
+    "original": "comopasardefeoaaguapoa.html",
+    "fondo": "#009933",
+    "menu": true,
+    "descripcion": "¿Eres siempre el/la mas feo/a de tu clase? Pues aquí tienes el cursillo en 3 pasos. De ser así, a ser así. Materiales: (el material no sale de"
+  },
+  {
+    "slug": "cosasasquerosas",
+    "titulo": "cosas asquerosas",
+    "original": "cosasasquerosas.html",
+    "fondo": "#cc6600",
+    "menu": true,
+    "descripcion": "Hola chupis, esta sección contiene fotos asquerosas y pringosas. Mirad: Bueno si encontráis mas foto grotescas bien por ti pero a mino me importa lo"
+  },
+  {
+    "slug": "moriresclavos",
+    "titulo": "Morir esclavos",
+    "original": "moriresclavos.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "lavos, hemos vuelto a reconstruir chupis. Próximamente un contador, prometido palabra dele stafador chupis."
+  },
+  {
+    "slug": "grandescagadas",
+    "titulo": "Grandes cagadas",
+    "original": "grandescagadas.html",
+    "fondo": "#cc9900",
+    "menu": true,
+    "descripcion": "GRANDES CAGADAS Aquí vereis unas fotos de las mejores cagadas del mundo entero, nota no son aptas para gente que le den las cosas asco con facilidad."
+  },
+  {
+    "slug": "comoseruncientificolocoentrspasos",
+    "titulo": "Ser un cientifico loco",
+    "original": "comoseruncientificolocoentrspasos.html",
+    "fondo": "#6666ff",
+    "menu": true,
+    "descripcion": "Bueno iremos al grano. MATERIAL: (El material no lo pagamos no lo pagamos nosotros) 1-Bata blanca 2-Seis o siete probetas(tarros de científico)"
+  },
+  {
+    "slug": "residentevil4",
+    "titulo": "Resident Evil 4",
+    "original": "residentevil4.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "RESIDENT EVIL 4 Aquí os dejo unos fondos de escritorio del Resident Evil 4 para la consola Nintendo Game Cube, espero que os gusten..."
+  },
+  {
+    "slug": "historiaschupis",
+    "titulo": "Historias Chupis",
+    "original": "historiaschupis.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "HISTORIAS CHUPIS Aquí os dejo la primera historia de Chupis, para sea quien sea pueda abrirla la ponemos en tres formatos (Open Office, Microsoft"
+  },
+  {
+    "slug": "historiadechupis",
+    "titulo": "Historia de Chupis",
+    "original": "historiadechupis.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "HISTORIA DE CHUPIS ¿Quereis conocer la historia y desarrollo de Chupis?, pues..a leer Cap. 1. Como surgió Todo empezó un día que un amigo mio que"
+  },
+  {
+    "slug": "consejosnoestasacadodematildadelanoveladeroaldahl",
+    "titulo": "Consejos,no son Matilda",
+    "original": "consejosnoestasacadodematildadelanoveladeroaldahl.html",
+    "fondo": "#66cccc",
+    "menu": true,
+    "descripcion": "La apariencia. 1-La apariencia es el 99% de la verdad. La gente no compra un coche, me compran a mi, por eso procuro cuidar tanto mi apariencia, pelo"
+  },
+  {
+    "slug": "tupginaweb",
+    "titulo": "Gecko",
+    "original": "tupginaweb.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "GECKO Las dos cara de esta palabra, hablando de palabras el Staffador Chupis os promete que la va a poner"
+  },
+  {
+    "slug": "forros",
+    "titulo": "El banco de Chupis",
+    "original": "forros.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "Proyecto cerrado, el dinero no siempre es una buena forma de divertirse"
+  },
+  {
+    "slug": "mariosexi",
+    "titulo": "Mario SEXI",
+    "original": "mariosexi.html",
+    "fondo": "#ff0000",
+    "menu": true,
+    "descripcion": "MARIO SEXI, PARECE IMPOSIBLE, PERO ES CIERTO. LAS IMÁGENES SON UN TANTO GROTESCAS PERO...A VER SI A TI SE TE OCURRE OTRA IDEA, LISTILLO/A."
+  },
+  {
+    "slug": "barriossamo",
+    "titulo": "Barrio Sésamo",
+    "original": "barriossamo.html",
+    "fondo": "#000033",
+    "menu": true,
+    "descripcion": "BARRIO SÉSAMO Bueno mucha gente recordará que cuando era pequeña vio esta serie, bueno aquí les dejo unas imágenes y los videos: Bueno y aquí os dejo"
+  },
+  {
+    "slug": "trajesparagatos",
+    "titulo": "Trajes para gatos",
+    "original": "trajesparagatos.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "TRAJES PARA GATOS."
+  },
+  {
+    "slug": "descargas",
+    "titulo": "Descargas",
+    "original": "descargas.html",
+    "fondo": "#000099",
+    "menu": true,
+    "descripcion": "DESCARGAS Próximamente en esta sección podrás descargar cosas de al Web Chupis..."
+  },
+  {
+    "slug": "internetexplorer7",
+    "titulo": "Internet Explorer 7",
+    "original": "internetexplorer7.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "INTERNET EXPLORER 7 Bueno ya está aquí la versión 7 de Internet Explorer, en los cambios podemos notar: 1- Ya se ha añadido la navegación por"
+  },
+  {
+    "slug": "seccinpokmon",
+    "titulo": "Sección Pokémon",
+    "original": "seccinpokmon.html",
+    "fondo": "#006600",
+    "menu": true,
+    "descripcion": "SECCIÓN POKÉMON Inicio: Página Principal ¿Qué es Pokémon? ¿Quién lo inventó? Sala de Chat Foro Pokémon El autor de la página Los Pokémon en general:"
+  },
+  {
+    "slug": "lareligin",
+    "titulo": "La religión!!",
+    "original": "lareligin.html",
+    "fondo": null,
+    "menu": true,
+    "descripcion": "DIOS. VIRGEN...... COSAS SATÁNICAS. ¿CUANTOS AÑOS TIENE UN BURRO? ANOTHER OK, AHORA A ESTUDIAR SOCIALES, QUE EL MARTES TENGO UN EXAMEN VERY"
+  },
+  {
+    "slug": "grandescagadas2",
+    "titulo": "Grandes cagadas (2)",
+    "original": "grandescagadas2.html",
+    "fondo": "#999933",
+    "menu": false,
+    "descripcion": "GRANDES CAGADAS Aun estais a tiempo de iros, Pinchar aquí para salir , bueno si no quieres salir, perpárate... Fotos de grandes cagadas: Proximamente"
+  }
+]
