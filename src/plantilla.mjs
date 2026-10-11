@@ -146,7 +146,7 @@ export const portada = () => `
   </div>
   <footer class="ai-disclaimer">
     <p class="ai-disclaimer-titulo">Sobre el uso de Inteligencia Artificial en este proyecto</p>
-    <p>Este sitio es una versión restaurada del archivo original de Chupis. La estructura y el diseño modernos fueron generados con asistencia de Inteligencia Artificial. El contenido original fue extraído manualmente.</p>
+    <p>Este sitio es una versión restaurada de Chupis, una antigua página de MSN Groups. La estructura y el diseño, que imitan al sitio original, fueron generados con asistencia de Inteligencia Artificial. Tanto el contenido original como el nuevo han sido creados y extraídos de forma manual.</p>
   </footer>
 `;
 
