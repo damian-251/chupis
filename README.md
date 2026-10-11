@@ -44,3 +44,13 @@ Cada persona entra con su token personal de GitHub. Para guardar necesita permis
 El editor permite modificar todas las 45 secciones antiguas, incluidas sus descripciones, visibilidad en el menú y color de fondo. El contenido de una sección antigua y su entrada en `src/secciones.json` se actualizan con un solo commit. También permite crear y editar secciones nuevas y subir imágenes de hasta 5 MB a `public/images/subidas/`.
 
 TinyMCE y Marked se cargan desde jsDelivr, así que el editor necesita conexión a Internet. Quien tenga permiso de escritura en el repositorio también puede cambiar los workflows; comparte ese acceso solo con personas de confianza. La guía detallada está en `GUIA-EDITORES.md`.
+
+
+## Sobre el uso de Inteligencia Artificial
+
+Este proyecto es una versión restaurada y modernizada de **Chupis**, una antigua página de **MSN Groups** (cerrado en 2009).
+
+- **Contenido original y nuevo:** todo el contenido ha sido recopilado y redactado manualmente.
+- **Estructura, plantilla y código:** la plantilla, el sistema de generación del sitio y gran parte del código de este repositorio fueron desarrollados con asistencia de Inteligencia Artificial.
+
+La IA se ha utilizado como herramienta de desarrollo, no como fuente de contenido. Todas las decisiones, la selección del material y la redacción final son de elaboración humana.
