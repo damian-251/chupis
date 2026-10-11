@@ -1,7 +1,7 @@
 ---
 titulo: "Nueva Seccion"
 descripcion: "Nueva Seccion"
-fondo: "#000000"
+fondo: "#4a2a55"
 menu: true
 fecha: "2026-10-11T13:28:29.001Z"
 ---
