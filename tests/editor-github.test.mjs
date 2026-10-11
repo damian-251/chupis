@@ -44,7 +44,7 @@ class SimulatedGitHub {
     const route = decodeURIComponent(url.pathname.slice(prefix.length));
     const method = options.method || 'GET';
     const body = options.body ? JSON.parse(options.body) : null;
-    this.requests.push({ route, method, body });
+    this.requests.push({ route, method, body, headers: options.headers });
 
     if (route.startsWith('/contents/')) {
       const filePath = route.slice('/contents/'.length);
@@ -125,6 +125,45 @@ test('guardar una sección antigua genera un solo commit con contenido y metadat
   assert.equal(savedList.find((item) => item.slug === 'bienrecibidos').titulo, 'Bienrecibidos');
   assert.deepEqual(mock.createdCommit.parents, ['head-1']);
   assert.deepEqual(mock.patchedRef, { sha: 'commit-created', force: false });
+});
+
+test('borrar una sección antigua elimina su HTML y metadatos en un commit', async () => {
+  const mock = new SimulatedGitHub();
+  await mock.initialize();
+  const client = makeClient(mock);
+  const loaded = await client.listSections();
+  const target = loaded.find((item) => item.slug === 'noticias');
+  await client.deleteSection(target);
+  assert.equal(mock.requests[0].headers.Authorization, 'Bearer test-token');
+  assert.equal(mock.createdTree.tree.length, 2);
+  assert.deepEqual(mock.createdTree.tree.find((item) => item.path === 'src/paginas/noticias.html'), {
+    path: 'src/paginas/noticias.html',
+    mode: '100644',
+    type: 'blob',
+    sha: null,
+  });
+  const manifest = JSON.parse(mock.createdTree.tree.find((item) => item.path === 'src/secciones.json').content);
+  assert.equal(manifest.some((item) => item.slug === 'noticias'), false);
+  assert.equal(manifest.length, 44);
+  assert.equal(mock.patchedRef.sha, 'commit-created');
+});
+
+test('borrar una sección nueva elimina su archivo Markdown', async () => {
+  const mock = new SimulatedGitHub();
+  await mock.initialize();
+  const client = makeClient(mock);
+  await client.deleteSection({
+    slug: 'prueba-nueva',
+    titulo: 'Prueba nueva',
+    tipo: 'nueva',
+    path: 'src/nuevas/prueba-nueva.md',
+  });
+  assert.deepEqual(mock.createdTree.tree, [{
+    path: 'src/nuevas/prueba-nueva.md',
+    mode: '100644',
+    type: 'blob',
+    sha: null,
+  }]);
 });
 
 test('la codificación Base64 conserva tildes, eñes y símbolos', () => {

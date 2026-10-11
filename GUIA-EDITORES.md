@@ -18,6 +18,7 @@ El editor permite modificar las 45 secciones antiguas y las secciones nuevas. No
 4. Edita el título, la descripción, el fondo y el contenido. El fondo se ve en el área de escritura mientras trabajas.
 5. Selecciona texto para cambiar su tipo de letra, tamaño, color, alineación, estilo o para añadir enlaces y listas.
 6. Pulsa **Guardar en GitHub**. Las secciones antiguas se guardan junto con sus metadatos en un único commit; las nuevas se guardan en `src/nuevas/`. Al llegar el commit a `main`, las acciones del repositorio regeneran el sitio.
+7. Para quitar una sección, selecciónala y pulsa **Borrar sección**. Confirma la acción; las secciones antiguas se eliminan junto con su archivo y las nuevas se quitan de `src/nuevas/`.
 
 ## Crear una sección nueva
 
@@ -25,7 +26,7 @@ Pulsa **+ Nueva**, escribe el título, completa la descripción, el fondo y el c
 
 ## Imágenes
 
-Usa el botón de imagen y selecciona un archivo. El editor lo sube a `public/images/subidas/` en GitHub. Se admiten imágenes de hasta 5 MB. La subida de la imagen crea su propio commit; guarda también la sección después de insertarla.
+Usa el botón de imagen y selecciona un archivo. El editor lo sube a `public/images/subidas/` en GitHub. Se admiten imágenes de hasta 5 MB. La subida de la imagen crea su propio commit; guarda también la sección después de insertarla. Las imágenes guardadas en el repositorio también se muestran en la vista de edición.
 
 ## Recomendaciones importantes
 
