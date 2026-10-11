@@ -177,6 +177,30 @@ main a.boton { color: #fff; &:hover { color: #000; } }
   iframe { display: block; inline-size: 100%; block-size: 600px; border: 1px solid #e0e0e0; border-radius: 8px; }
 }
 
+
+.ai-disclaimer {
+  margin-top: 3rem;          /* Espacio entre el guestbook y el disclaimer */
+  padding: 1.5rem 1rem;
+  text-align: center;        /* Centra el texto */
+  font-size: 0.75rem;
+  color: #888;
+  line-height: 1.4;
+  border-top: 1px solid #444; /* Separador sutil */
+}
+
+.ai-disclaimer-titulo {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin: 0 0 0.75rem 0;      /* Espacio entre el título y el párrafo */
+  color: #aaa;                /* Un poco más claro para destacar */
+  letter-spacing: 0.5px;
+}
+
+.ai-disclaimer p {
+  margin: 0 auto;             /* Centra el bloque de texto */
+  max-width: 600px;           /* Evita líneas demasiado largas */
+}
+
 /* ---------- Móvil: el menú pasa arriba y se pliega ---------- */
 @media (max-width: 40rem) {
   .banda { block-size: 1.5rem; }

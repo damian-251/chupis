@@ -145,7 +145,8 @@ export const portada = () => `
     <iframe src="https://guestbooks.meadow.cafe/guestbook/6290" title="Libro de visitas" loading="lazy"></iframe>
   </div>
   <footer class="ai-disclaimer">
-    <p>Este sitio es una versión restaurada del archivo original de Chupis. La estructura y el diseño modernos fueron generados con asistencia de Inteligencia Artificial (Claude). El contenido original fue extraído manualmente.</p>
+    <h2 class="ai-disclaimer-titulo">Sobre el uso de Inteligencia Artificial en este proyecto</h2>
+    <p>Este sitio es una versión restaurada del archivo original de Chupis. La estructura y el diseño modernos fueron generados con asistencia de Inteligencia Artificial. El contenido original fue extraído manualmente.</p>
   </footer>
 `;
 
