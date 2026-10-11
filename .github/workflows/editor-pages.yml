@@ -1,0 +1,42 @@
+name: Publicar el editor (GitHub Pages)
+
+# Neocities bloquea que sus páginas se conecten a GitHub, así que el editor visual
+# se publica aparte, en GitHub Pages. Solo se sube la carpeta editor/.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "editor/**"
+      - ".github/workflows/editor-pages.yml"
+  workflow_dispatch: # permite lanzarlo a mano desde la pestaña Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empaquetar el editor
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: editor
+
+      - name: Publicar en GitHub Pages
+        id: despliegue
+        uses: actions/deploy-pages@v5

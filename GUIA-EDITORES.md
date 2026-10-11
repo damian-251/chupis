@@ -16,7 +16,7 @@ Esta guía es para las personas que escriben secciones nuevas. No hace falta sab
 
 ## Entrar al editor
 
-1. Abre `https://TU-SITIO.neocities.org/admin/`.
+1. Abre `https://TU_USUARIO.github.io/TU_REPOSITORIO/`. Quien administra el sitio te dará la dirección exacta.
 2. Elige iniciar sesión con GitHub mediante token y pega el tuyo.
 
 ## Crear una sección
