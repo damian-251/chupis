@@ -67,4 +67,5 @@ Ten en cuenta:
 - Quien tiene permiso de escritura en el repositorio puede modificar la Action y, con ella, usar la clave `NEOCITIES_API_TOKEN`. Da acceso solo a personas de confianza.
 - Con `cleanup: false` en `neocities.yml`, si alguien borra una sección en el editor, la página sigue en Neocities hasta que la borres tú desde el panel. Si cambias `cleanup` a `true`, Neocities quedará idéntico a `dist/` y se borrarán los archivos que no estén ahí.
 - El editor carga su código desde `unpkg.com`, fijado a una versión concreta (`editor/index.html`). Para actualizarlo, cambia el número de versión.
+- Sveltia solo trae el español de Colombia. `editor/es-ES.json` es una copia adaptada al español de España (por ejemplo «Añadir» e «Introduce»), y `editor/index.html` la carga en su lugar. Si cambias la versión de Sveltia, conviene comprobar que sigue funcionando.
 - Los textos de las secciones nuevas se guardan en Markdown y se convierten a HTML al generar el sitio.

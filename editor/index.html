@@ -8,6 +8,18 @@
 </head>
 <body>
   <!-- Editor visual (Sveltia CMS). La configuración está en config.js -->
+  <!-- Sveltia solo incluye el español de Colombia. Se sustituye por es-ES.json, una versión adaptada al español de España. -->
+  <script>
+    (() => {
+      const original = window.fetch.bind(window);
+      window.fetch = (entrada, opciones) => {
+        const url = typeof entrada === "string" ? entrada : entrada?.url ?? String(entrada);
+        return /\/locales\/es-CO\.json$/.test(url) ? original("es-ES.json", opciones) : original(entrada, opciones);
+      };
+      // Sveltia guarda en caché la traducción; se borra para que siempre use la de España.
+      try { localStorage.removeItem("sveltia-cms.locale"); } catch {}
+    })();
+  </script>
   <script>window.CMS_MANUAL_INIT = true;</script>
   <script src="https://unpkg.com/@sveltia/cms@0.233.1/dist/sveltia-cms.js"></script>
   <script src="config.js"></script>
