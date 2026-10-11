@@ -126,7 +126,7 @@ main {
   img.medio { vertical-align: middle; }
   img.centrada { display: block; margin-inline: auto; }
 }
-.centro { text-align: center; }
+.centro { max-inline-size: none; margin-inline: auto; text-align: center; }
 .derecha { text-align: end; }
 
 /* Tamaños que antes se escribían con <font size="..."> */
