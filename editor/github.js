@@ -50,6 +50,7 @@ export function serializeMarkdownDocument(section, html) {
     `descripcion: ${JSON.stringify((section.descripcion || "").trim())}`,
     `fondo: ${JSON.stringify(section.fondo || "#000000")}`,
     `menu: ${section.menu !== false}`,
+    ...(section.padre ? [`padre: ${JSON.stringify(section.padre)}`] : []),
     `fecha: ${JSON.stringify(fecha)}`,
   ];
   return `---\n${lines.join("\n")}\n---\n\n${html.trim()}\n`;
@@ -142,6 +143,7 @@ export class GitHubClient {
         descripcion: String(meta.descripcion ?? ""),
         fondo: String(meta.fondo ?? "#000000").toLowerCase() === "#000000" ? null : String(meta.fondo ?? ""),
         menu: meta.menu !== false,
+        padre: String(meta.padre ?? ""),
         fecha: meta.fecha ?? "",
         html: renderMarkdown(parsed.body),
         markdown: parsed.body,
@@ -161,6 +163,7 @@ export class GitHubClient {
       descripcion: values.descripcion.trim() || values.titulo.trim(),
       fondo,
       menu: values.menu,
+      padre: values.padre || "",
       fecha: current.fecha || new Date().toISOString(),
     };
     if (!section.titulo) throw new Error("El título es obligatorio.");
@@ -170,13 +173,16 @@ export class GitHubClient {
       const latestSections = JSON.parse(await this.readText(sectionsPath));
       const index = latestSections.findIndex((item) => item.slug === section.slug);
       if (index < 0) throw new Error(`La sección «${section.slug}» ya no aparece en src/secciones.json. Recarga la lista antes de guardar.`);
-      latestSections[index] = {
+      const updatedSection = {
         ...latestSections[index],
         titulo: section.titulo,
         descripcion: section.descripcion,
         fondo: section.fondo,
         menu: section.menu,
       };
+      if (section.padre) updatedSection.padre = section.padre;
+      else delete updatedSection.padre;
+      latestSections[index] = updatedSection;
       const htmlPath = `src/paginas/${section.slug}.html`;
       await this.commitFiles([
         { path: htmlPath, content: values.html },
@@ -198,6 +204,7 @@ export class GitHubClient {
       descripcion: values.descripcion.trim() || values.titulo.trim(),
       fondo: values.usarFondo && values.fondo.toLowerCase() !== "#000000" ? values.fondo.toLowerCase() : null,
       menu: values.menu,
+      padre: values.padre || "",
       fecha: new Date().toISOString(),
     };
     if (!section.titulo) throw new Error("El título es obligatorio.");

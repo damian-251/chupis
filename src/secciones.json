@@ -13,6 +13,7 @@
     "original": "noticias.html",
     "fondo": null,
     "menu": true,
+    "padre": "bienrecibidos",
     "descripcion": "NOTICIAS NOTICIAS WEB : Instalado un contador avanzado y Web temporalmente privada. Se acaba de instalar en la Web un nuevo contador avanzado para"
   },
   {

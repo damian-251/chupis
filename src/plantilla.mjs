@@ -43,12 +43,25 @@ function coloresDe(fondo) {
  * @param {boolean} p.ocultarTitulo  Añade un <h1> solo para lectores de pantalla
  */
 export function pagina({ titulo, descripcion, raiz, actual, cuerpo, secciones, fondo = null, clase = "", ocultarTitulo = true }) {
-  const item = (href, texto, activa) =>
-    `        <li><a href="${href}"${activa ? ' aria-current="page"' : ""}>${escapar(texto)}</a></li>`;
-  const enlaces = [
-    item(raiz, "Principal", actual === ""),
-    ...secciones.filter((s) => s.menu).map((s) => item(`${raiz}${s.slug}/`, s.titulo, s.slug === actual)),
-  ].join("\n");
+  const seccionesPorPadre = new Map();
+  for (const seccion of secciones) {
+    const padre = seccion.padre || "";
+    seccionesPorPadre.set(padre, [...(seccionesPorPadre.get(padre) ?? []), seccion]);
+  }
+  const contieneActual = (seccion) =>
+    seccion.slug === actual || (seccionesPorPadre.get(seccion.slug) ?? []).some(contieneActual);
+  const enlacesDe = (padre = "") =>
+    (seccionesPorPadre.get(padre) ?? []).flatMap((seccion) => {
+      const hijos = enlacesDe(seccion.slug);
+      if (seccion.menu === false) return hijos;
+      const href = `${raiz}${escapar(seccion.slug)}/`;
+      if (!hijos.length) {
+        return [`        <li><a href="${href}"${seccion.slug === actual ? ' aria-current="page"' : ""}>${escapar(seccion.titulo)}</a></li>`];
+      }
+      const enlacePrincipal = `        <li><a href="${href}"${seccion.slug === actual ? ' aria-current="page"' : ""}>Ver ${escapar(seccion.titulo)}</a></li>`;
+      return [`        <li><details class="submenu"${contieneActual(seccion) && seccion.slug !== actual ? " open" : ""}>\n          <summary>${escapar(seccion.titulo)}</summary>\n          <ul>\n${[enlacePrincipal, ...hijos].join("\n")}\n          </ul>\n        </details></li>`];
+    });
+  const enlaces = [`        <li><a href="${raiz}"${actual === "" ? ' aria-current="page"' : ""}>Principal</a></li>`, ...enlacesDe()];
 
   const nombre = actual ? `${titulo} · Chupis` : titulo;
   const h1 = ocultarTitulo ? `      <h1 class="solo-lectores">${escapar(titulo)}</h1>\n` : "";
@@ -98,7 +111,7 @@ export function pagina({ titulo, descripcion, raiz, actual, cuerpo, secciones, f
       <details open>
         <summary>Secciones</summary>
         <ul>
-${enlaces}
+${enlaces.join("\n")}
         </ul>
       </details>
     </nav>

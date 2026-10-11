@@ -7,8 +7,8 @@ Versión actualizada del sitio, sin marcos (`<iframe>`) y con una sola plantilla
 | Carpeta o archivo | Para qué sirve |
 |---|---|
 | `src/paginas/*.html` | El contenido HTML de las 45 secciones antiguas. Se puede editar desde el editor visual. |
-| `src/secciones.json` | Nombre del menú, dirección, color de fondo, descripción y orden de las secciones antiguas. |
-| `src/nuevas/*.md` | Secciones creadas desde el editor visual, con cabecera YAML y contenido HTML/Markdown. |
+| `src/secciones.json` | Nombre del menú, dirección, color de fondo, descripción, sección superior opcional (`padre`) y orden de las secciones antiguas. |
+| `src/nuevas/*.md` | Secciones creadas desde el editor visual, con cabecera YAML, sección superior opcional (`padre`) y contenido HTML/Markdown. |
 | `editor/` | Editor visual propio, publicado en GitHub Pages. Usa TinyMCE y la API de GitHub para leer y guardar contenido. |
 | `tests/editor-github.test.mjs` | Pruebas automatizadas de la integración de GitHub simulada. |
 | `GUIA-EDITORES.md` | Instrucciones para las personas que editan el sitio. |

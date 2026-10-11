@@ -57,7 +57,10 @@
             <div class="section-eyebrow">CONTENIDO</div>
             <h2>Secciones</h2>
           </div>
-          <button id="new-section-button" class="button primary compact" type="button">+ Nueva</button>
+          <div class="sidebar-actions">
+            <button id="new-subsection-button" class="button secondary compact" type="button" title="Crear una subsección dentro de la sección seleccionada" aria-label="Crear subsección" disabled>+ Sub.</button>
+            <button id="new-section-button" class="button primary compact" type="button">+ Nueva</button>
+          </div>
         </div>
         <label class="search-label" for="section-search">Buscar sección</label>
         <input id="section-search" class="search-input" type="search" placeholder="Escribe un título…" autocomplete="off">
@@ -98,6 +101,12 @@
                 <span id="background-value">Fondo predeterminado · negro</span>
               </div>
             </div>
+            <label class="parent-field">Sección superior · subsección de
+              <select id="section-parent" name="parent">
+                <option value="">Ninguna · sección principal</option>
+              </select>
+              <span class="field-hint">Elige una sección para anidar esta página. Puedes cambiarla cuando quieras.</span>
+            </label>
             <label class="inline-check menu-check"><input id="section-menu" type="checkbox" checked> Mostrar en el menú</label>
           </div>
 

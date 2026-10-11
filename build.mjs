@@ -38,12 +38,28 @@ for (const archivo of (await readdir(path.join(aqui, "src/nuevas"))).filter((f) 
     fondo: fondo === "#000000" ? null : fondo,
     menu: datos.menu !== false,
     descripcion: String(datos.descripcion || "").trim() || titulo,
+    padre: typeof datos.padre === "string" ? datos.padre.trim() : "",
     fecha: new Date(datos.fecha ?? 0).getTime() || 0,
     html: `      <h2 class="titulo">${escapar(titulo)}</h2>\n${html}`,
   });
 }
 nuevas.sort((a, b) => a.fecha - b.fecha);
 secciones.push(...nuevas);
+
+const seccionesPorSlug = new Map(secciones.map((seccion) => [seccion.slug, seccion]));
+for (const seccion of secciones) {
+  if (!seccion.padre) continue;
+  if (!seccionesPorSlug.has(seccion.padre)) {
+    throw new Error(`La sección "${seccion.slug}" apunta a una sección superior inexistente: "${seccion.padre}".`);
+  }
+  const visitados = new Set([seccion.slug]);
+  let padre = seccion.padre;
+  while (padre) {
+    if (visitados.has(padre)) throw new Error(`La jerarquía de secciones contiene un ciclo desde "${seccion.slug}".`);
+    visitados.add(padre);
+    padre = seccionesPorSlug.get(padre)?.padre || "";
+  }
+}
 
 // Los fragmentos usan rutas "desde la raíz" (images/x.jpg, otra-seccion/).
 // Aquí se ajustan según la profundidad de cada página.
