@@ -132,18 +132,22 @@ ${h1}${cuerpo}
 `;
 }
 
-export const portada = () => `      <h1 class="logo-gif" aria-label="CHUPIS">
-        <img src="images/c.gif" alt="" width="70" height="100">
-        <img src="images/h.gif" alt="" width="72" height="100">
-        <img src="images/u.gif" alt="" width="72" height="100">
-        <img src="images/p.gif" alt="" width="66" height="100">
-        <img src="images/i.gif" alt="" width="38" height="100">
-        <img src="images/s.gif" alt="" width="58" height="100">
-      </h1>
-      <p><a class="boton" href="${WEBARCHIVE}">Chupis en WebArchive</a></p>
-      <div class="libro">
-        <iframe src="https://guestbooks.meadow.cafe/guestbook/6290" title="Libro de visitas" loading="lazy"></iframe>
-      </div>`;
+export const portada = () => `
+  <h1 class="logo-gif" aria-label="CHUPIS">
+    <img src="images/c.gif" alt="" width="70" height="100">
+    <img src="images/h.gif" alt="" width="72" height="100">
+    <img src="images/u.gif" alt="" width="72" height="100">
+    <img src="images/p.gif" alt="" width="66" height="100">
+    <img src="images/i.gif" alt="" width="38" height="100">
+    <img src="images/s.gif" alt="" width="58" height="100">
+  </h1>
+  <div class="libro">
+    <iframe src="https://guestbooks.meadow.cafe/guestbook/6290" title="Libro de visitas" loading="lazy"></iframe>
+  </div>
+  <footer class="ai-disclaimer">
+    <p>Este sitio es una versión restaurada del archivo original de Chupis. La estructura y el diseño modernos fueron generados con asistencia de Inteligencia Artificial (Claude). El contenido original fue extraído manualmente.</p>
+  </footer>
+`;
 
 export const noEncontrada = () => `      <h2>Página no encontrada</h2>
       <p>La página que buscas no existe o se ha movido.</p>
