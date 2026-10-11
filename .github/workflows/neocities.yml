@@ -21,9 +21,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: npm
 
       - name: Generar el sitio
-        run: npm run build
+        run: npm ci && npm run build
 
       - name: Subir dist/ a Neocities
         uses: bcomnes/deploy-to-neocities@v3
