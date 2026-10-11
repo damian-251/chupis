@@ -179,25 +179,27 @@ main a.boton { color: #fff; &:hover { color: #000; } }
 
 
 .ai-disclaimer {
-  margin-top: 3rem;          /* Espacio entre el guestbook y el disclaimer */
+  margin-top: 3rem;
   padding: 1.5rem 1rem;
-  text-align: center;        /* Centra el texto */
+  text-align: center;
   font-size: 0.75rem;
   color: #888;
   line-height: 1.4;
-  border-top: 1px solid #444; /* Separador sutil */
+  border-top: 1px solid #444;
 }
 
 .ai-disclaimer-titulo {
-  font-size: 0.75rem;        /* Mismo tamaño que el cuerpo */
-  font-weight: bold;         /* Solo negrita para destacar */
-  margin: 0 0 0.5rem 0;      /* Espacio pequeño antes del párrafo */
-  color: #aaa;               /* Un poco más claro */
+  font-size: 0.65rem;        /* Más pequeño que el cuerpo */
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  color: #aaa;
+  text-align: center;        /* Fuerza el centrado */
 }
 
 .ai-disclaimer p {
   margin: 0 auto;
   max-width: 600px;
+  text-align: center;        /* Asegura el centrado del párrafo */
 }
 
 /* ---------- Móvil: el menú pasa arriba y se pliega ---------- */
