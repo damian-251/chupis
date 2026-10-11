@@ -189,16 +189,15 @@ main a.boton { color: #fff; &:hover { color: #000; } }
 }
 
 .ai-disclaimer-titulo {
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin: 0 0 0.75rem 0;      /* Espacio entre el título y el párrafo */
-  color: #aaa;                /* Un poco más claro para destacar */
-  letter-spacing: 0.5px;
+  font-size: 0.75rem;        /* Mismo tamaño que el cuerpo */
+  font-weight: bold;         /* Solo negrita para destacar */
+  margin: 0 0 0.5rem 0;      /* Espacio pequeño antes del párrafo */
+  color: #aaa;               /* Un poco más claro */
 }
 
 .ai-disclaimer p {
-  margin: 0 auto;             /* Centra el bloque de texto */
-  max-width: 600px;           /* Evita líneas demasiado largas */
+  margin: 0 auto;
+  max-width: 600px;
 }
 
 /* ---------- Móvil: el menú pasa arriba y se pliega ---------- */
