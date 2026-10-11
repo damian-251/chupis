@@ -61,7 +61,13 @@ export function slugFromTitle(title) {
 }
 
 export class GitHubClient {
-  constructor({ owner, repo, branch = "main", token, fetchImpl = globalThis.fetch }) {
+  constructor({
+  owner,
+  repo,
+  branch = "main",
+  token,
+  fetchImpl = (...args) => globalThis.fetch(...args)
+}) {
     this.owner = owner.trim();
     this.repo = repo.trim();
     this.branch = branch.trim();
