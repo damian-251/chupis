@@ -139,7 +139,7 @@ main {
 .t6, .t7 { line-height: 1.1; }
 
 /* Secciones nuevas (creadas con el editor visual) */
-main .titulo { text-align: center; font: 400 clamp(1.6rem, 6vw, 3rem)/1.1 var(--fuente); margin: 0 0 1rem; }
+main .titulo { text-align: center; font: 400 clamp(1.6rem, 6vw, 3rem)/1.1 var(--fuente); margin: 0 auto 1rem; }
 main :where(h2, h3) { line-height: 1.15; margin-block: 1.2em 0.5em; }
 main :where(h2) { font-size: 1.6rem; }
 main :where(h3) { font-size: 1.3rem; }
