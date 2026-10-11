@@ -3,25 +3,130 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="color-scheme" content="light">
   <title>Editor de Chupis</title>
+  <link rel="stylesheet" href="editor.css">
 </head>
 <body>
-  <!-- Editor visual (Sveltia CMS). La configuración está en config.js -->
-  <!-- Sveltia solo incluye el español de Colombia. Se sustituye por es-ES.json, una versión adaptada al español de España. -->
-  <script>
-    (() => {
-      const original = window.fetch.bind(window);
-      window.fetch = (entrada, opciones) => {
-        const url = typeof entrada === "string" ? entrada : entrada?.url ?? String(entrada);
-        return /\/locales\/es-CO\.json$/.test(url) ? original("es-ES.json", opciones) : original(entrada, opciones);
-      };
-      // Sveltia guarda en caché la traducción; se borra para que siempre use la de España.
-      try { localStorage.removeItem("sveltia-cms.locale"); } catch {}
-    })();
-  </script>
-  <script>window.CMS_MANUAL_INIT = true;</script>
-  <script src="https://unpkg.com/@sveltia/cms@0.233.1/dist/sveltia-cms.js"></script>
-  <script src="config.js"></script>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Editor de Chupis, inicio">
+      <span class="brand-mark" aria-hidden="true">C</span>
+      <span><strong>Chupis</strong><small>Editor de secciones</small></span>
+    </a>
+    <p class="top-note">Edita las páginas antiguas y las nuevas sin tocar código.</p>
+  </header>
+
+  <main class="page-shell">
+    <section id="connection-panel" class="connection-card" aria-labelledby="connection-title">
+      <div class="section-eyebrow">ACCESO AL REPOSITORIO</div>
+      <h1 id="connection-title">Conectar con GitHub</h1>
+      <p class="muted">El editor lee y guarda los archivos de tu repositorio. El token se utiliza solo en esta pestaña; no se guarda en el proyecto ni en el almacenamiento del navegador.</p>
+      <form id="connection-form">
+        <div class="connection-grid">
+          <label>Usuario u organización
+            <input id="github-owner" name="owner" value="damian-251" autocomplete="username" required>
+          </label>
+          <label>Repositorio
+            <input id="github-repo" name="repo" value="chupis" required>
+          </label>
+          <label>Rama
+            <input id="github-branch" name="branch" value="main" required>
+          </label>
+          <label class="token-field">Token personal de GitHub
+            <input id="github-token" name="token" type="password" placeholder="Pega aquí tu token ghp_…" autocomplete="off" spellcheck="false" required>
+          </label>
+        </div>
+        <div class="connection-actions">
+          <button class="button primary" id="connect-button" type="submit">Conectar y cargar secciones</button>
+          <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener noreferrer">Crear o administrar un token</a>
+        </div>
+      </form>
+      <details class="help-note">
+        <summary>¿Qué permisos necesita el token?</summary>
+        <p>En un token de acceso detallado, selecciona este repositorio y concede permiso de lectura y escritura en <strong>Contents</strong>. Un token clásico necesita <code>public_repo</code> si el repositorio es público o <code>repo</code> si es privado. No compartas el token ni lo incluyas en capturas.</p>
+      </details>
+    </section>
+
+    <div id="global-status" class="status" role="status" aria-live="polite" hidden></div>
+
+    <section id="workspace" class="workspace" hidden>
+      <aside class="sidebar" aria-label="Lista de secciones">
+        <div class="sidebar-top">
+          <div>
+            <div class="section-eyebrow">CONTENIDO</div>
+            <h2>Secciones</h2>
+          </div>
+          <button id="new-section-button" class="button primary compact" type="button">+ Nueva</button>
+        </div>
+        <label class="search-label" for="section-search">Buscar sección</label>
+        <input id="section-search" class="search-input" type="search" placeholder="Escribe un título…" autocomplete="off">
+        <div id="section-count" class="section-count">0 secciones</div>
+        <nav id="section-list" class="section-list" aria-label="Secciones editables"></nav>
+        <div class="sidebar-footer">
+          <span class="connection-dot" aria-hidden="true"></span>
+          <span id="connected-repo">Conectado</span>
+          <button id="disconnect-button" class="text-button" type="button">Desconectar</button>
+        </div>
+      </aside>
+
+      <section class="editor-panel" aria-labelledby="editor-title">
+        <div class="editor-heading">
+          <div>
+            <div class="section-eyebrow" id="section-kind">SECCIÓN ANTIGUA</div>
+            <h1 id="editor-title">Elige una sección</h1>
+            <p id="editor-subtitle" class="muted">Los cambios se guardarán como un commit en GitHub.</p>
+          </div>
+          <span id="dirty-indicator" class="dirty-indicator" hidden>Sin guardar</span>
+        </div>
+
+        <form id="section-form" class="section-form">
+          <div class="metadata-grid">
+            <label class="title-field">Título
+              <input id="section-title" name="title" maxlength="160" required>
+            </label>
+            <label class="description-field">Descripción para buscadores
+              <input id="section-description" name="description" maxlength="300" placeholder="Una frase breve sobre esta página">
+            </label>
+            <div class="background-field">
+              <div class="background-label-row">
+                <label for="section-background">Fondo de la sección</label>
+                <label class="inline-check"><input id="use-custom-background" type="checkbox"> Usar color propio</label>
+              </div>
+              <div class="color-control">
+                <input id="section-background" type="color" value="#000000" aria-label="Seleccionar color de fondo" disabled>
+                <span id="background-value">Fondo predeterminado · negro</span>
+              </div>
+            </div>
+            <label class="inline-check menu-check"><input id="section-menu" type="checkbox" checked> Mostrar en el menú</label>
+          </div>
+
+          <div class="writing-label-row">
+            <div>
+              <h2>Contenido</h2>
+              <p class="muted">Selecciona texto para cambiar su fuente, tamaño o color. El fondo se actualiza mientras escribes.</p>
+            </div>
+            <span class="writing-tag">VISTA DE EDICIÓN</span>
+          </div>
+          <div class="canvas-frame">
+            <textarea id="content" aria-label="Contenido HTML de la sección"></textarea>
+          </div>
+
+          <div class="form-footer">
+            <p id="save-explanation" class="muted">Al guardar se crea un commit en la rama seleccionada.</p>
+            <div class="form-actions">
+              <button id="reload-section-button" class="button secondary" type="button">Descartar cambios</button>
+              <button id="save-button" class="button primary" type="submit">Guardar en GitHub</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </section>
+    <footer class="page-footer">El token no se almacena en esta aplicación. Revisa los cambios antes de guardarlos.</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" referrerpolicy="no-referrer"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

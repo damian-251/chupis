@@ -6,66 +6,41 @@ Versión actualizada del sitio, sin marcos (`<iframe>`) y con una sola plantilla
 
 | Carpeta o archivo | Para qué sirve |
 |---|---|
-| `src/paginas/*.html` | El contenido de cada sección. Es lo único que hay que editar para cambiar textos o imágenes. |
-| `src/secciones.json` | Lista de las secciones antiguas: nombre en el menú, dirección, color de fondo y orden. |
-| `src/nuevas/*.md` | Secciones creadas con el editor visual. Las genera el editor, no se tocan a mano. |
-| `editor/` | El editor visual. Se publica en GitHub Pages, no en Neocities. La configuración está en `config.js`. |
-| `GUIA-EDITORES.md` | Guía para las personas que escriben secciones nuevas. |
+| `src/paginas/*.html` | El contenido HTML de las 45 secciones antiguas. Se puede editar desde el editor visual. |
+| `src/secciones.json` | Nombre del menú, dirección, color de fondo, descripción y orden de las secciones antiguas. |
+| `src/nuevas/*.md` | Secciones creadas desde el editor visual, con cabecera YAML y contenido HTML/Markdown. |
+| `editor/` | Editor visual propio, publicado en GitHub Pages. Usa TinyMCE y la API de GitHub para leer y guardar contenido. |
+| `tests/editor-github.test.mjs` | Pruebas automatizadas de la integración de GitHub simulada. |
+| `GUIA-EDITORES.md` | Instrucciones para las personas que editan el sitio. |
 | `src/plantilla.mjs` | Cabecera, menú y portada. Se escriben una sola vez para todo el sitio. |
-| `public/` | Estilos, favicon y la carpeta `images/`. Se copia tal cual. |
+| `public/` | Estilos, favicon y la carpeta `images/`. Las imágenes nuevas se suben a `public/images/subidas/`. |
 | `build.mjs` | Genera el sitio completo en `dist/`. |
-| `dist/` | El sitio terminado. Esto es lo que se sube a Neocities. |
-| `IMAGENES-FALTANTES.txt` | Imágenes que las páginas piden y no están en `images/`. |
+| `dist/` | El sitio terminado, listo para publicar en Neocities. |
+| `IMAGENES-FALTANTES.txt` | Informe de imágenes que las páginas piden y no están en `public/images/`. |
 
-## Uso
+## Uso local
 
 Necesitas Node 20 o superior.
 
-```
+```sh
 npm install         # solo la primera vez
-node build.mjs      # regenera dist/
+npm run build       # regenera dist/
+npm test            # pruebas del editor y de la API simulada
 npm start           # regenera y abre el sitio en local
 ```
 
 ## Publicar en Neocities
 
-Sube el contenido de la carpeta `dist/` (no la carpeta en sí). Las direcciones antiguas,
-como `/noticias.html`, siguen funcionando y llevan a la nueva, `/noticias/`.
+El workflow `.github/workflows/neocities.yml` genera `dist/` y lo sube a Neocities al recibir un commit en `main`. Las direcciones antiguas, como `/noticias.html`, siguen funcionando y llevan a la dirección nueva `/noticias/`.
 
-## Añadir una sección
+## Editor visual
 
-1. Crea `src/paginas/mi-seccion.html` con el contenido.
-2. Añade una entrada en `src/secciones.json`:
-   `{ "slug": "mi-seccion", "titulo": "Mi sección", "original": "mi-seccion.html", "fondo": "#330033", "menu": true, "descripcion": "Texto corto para buscadores." }`
-3. Ejecuta `node build.mjs`.
+El editor vive en `editor/` y se publica en GitHub Pages mediante `.github/workflows/editor-pages.yml`. No puede vivir en Neocities porque Neocities impide que sus páginas se conecten a GitHub.
 
-En los fragmentos, las rutas se escriben desde la raíz (`images/foto.jpg`, `noticias/`); el generador las ajusta solo.
+Para activarlo, abre **Settings → Pages** y elige **GitHub Actions** como origen; después de publicar el workflow, la dirección será `https://TU_USUARIO.github.io/TU_REPOSITORIO/`. El editor viene preconfigurado con `damian-251/chupis`, rama `main`, y permite cambiar esos tres campos al conectarse.
 
-## Clases disponibles en el contenido
+Cada persona entra con su token personal de GitHub. Para guardar necesita permiso de lectura y escritura en `Contents` para este repositorio. El token se mantiene en memoria mientras está abierta la pestaña; no se escribe en archivos ni en `localStorage`.
 
-`centro`, `derecha`, `t1` a `t7` (tamaños de letra, antes `<font size>`), `izq`, `medio`, `centrada` (imágenes).
+El editor permite modificar todas las 45 secciones antiguas, incluidas sus descripciones, visibilidad en el menú y color de fondo. El contenido de una sección antigua y su entrada en `src/secciones.json` se actualizan con un solo commit. También permite crear y editar secciones nuevas y subir imágenes de hasta 5 MB a `public/images/subidas/`.
 
-## Editor visual para otras personas
-
-El sitio incluye un editor visual (Sveltia CMS) en la carpeta `editor/`. Cada sección que se guarda ahí se publica sola:
-el editor guarda un archivo en `src/nuevas/`, la Action de GitHub regenera el sitio y lo sube a Neocities.
-
-El editor no puede vivir en Neocities, porque Neocities impide que sus páginas se conecten a GitHub.
-Por eso se publica aparte en GitHub Pages, con la Action `editor-pages.yml`. Su dirección será
-`https://TU_USUARIO.github.io/TU_REPOSITORIO/`.
-
-Para activarlo:
-
-1. Abre `editor/config.js` y cambia `TU_USUARIO/TU_REPOSITORIO` por el de tu repositorio.
-2. En GitHub, abre **Settings, Pages** y en **Source** elige **GitHub Actions**.
-3. Haz commit y push. Cuando termine la Action «Publicar el editor (GitHub Pages)», entra en la dirección del editor.
-4. Para añadir a otras personas, ve a **Settings, Collaborators**. Cada una crea su token siguiendo `GUIA-EDITORES.md`.
-
-Ten en cuenta:
-
-- GitHub Pages es gratis para repositorios públicos. Si tu repositorio es privado, necesitas un plan de pago de GitHub. El repositorio público no expone tus claves: la de Neocities está en los secretos.
-- Quien tiene permiso de escritura en el repositorio puede modificar la Action y, con ella, usar la clave `NEOCITIES_API_TOKEN`. Da acceso solo a personas de confianza.
-- Con `cleanup: false` en `neocities.yml`, si alguien borra una sección en el editor, la página sigue en Neocities hasta que la borres tú desde el panel. Si cambias `cleanup` a `true`, Neocities quedará idéntico a `dist/` y se borrarán los archivos que no estén ahí.
-- El editor carga su código desde `unpkg.com`, fijado a una versión concreta (`editor/index.html`). Para actualizarlo, cambia el número de versión.
-- Sveltia solo trae el español de Colombia. `editor/es-ES.json` es una copia adaptada al español de España (por ejemplo «Añadir» e «Introduce»), y `editor/index.html` la carga en su lugar. Si cambias la versión de Sveltia, conviene comprobar que sigue funcionando.
-- Los textos de las secciones nuevas se guardan en Markdown y se convierten a HTML al generar el sitio.
+TinyMCE y Marked se cargan desde jsDelivr, así que el editor necesita conexión a Internet. Quien tenga permiso de escritura en el repositorio también puede cambiar los workflows; comparte ese acceso solo con personas de confianza. La guía detallada está en `GUIA-EDITORES.md`.
