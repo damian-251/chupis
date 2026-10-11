@@ -13,6 +13,7 @@ const dirtyIndicator = byId("dirty-indicator");
 const saveButton = byId("save-button");
 const deleteButton = byId("delete-section-button");
 const newSectionButton = byId("new-section-button");
+const newSubsectionButton = byId("new-subsection-button");
 const backgroundPicker = byId("section-background");
 const customBackground = byId("use-custom-background");
 
@@ -69,13 +70,36 @@ function readFormValues() {
     usarFondo: customBackground.checked,
     fondo: backgroundPicker.value,
     menu: byId("section-menu").checked,
+    padre: byId("section-parent").value,
     html: content,
   };
+}
+
+function actualizarPadres(section) {
+  const select = byId("section-parent");
+  select.replaceChildren(new Option("Ninguna · sección principal", ""));
+  const excluidas = new Set([section?.slug]);
+  let cambio = true;
+  while (cambio) {
+    cambio = false;
+    for (const candidate of allSections) {
+      if (candidate.padre && excluidas.has(candidate.padre) && !excluidas.has(candidate.slug)) {
+        excluidas.add(candidate.slug);
+        cambio = true;
+      }
+    }
+  }
+  for (const candidate of allSections) {
+    if (candidate.id === section?.id || (candidate.menu === false && candidate.slug !== section?.padre) || excluidas.has(candidate.slug)) continue;
+    select.add(new Option(candidate.titulo, candidate.slug));
+  }
+  select.value = section?.padre ?? "";
 }
 
 function setFormValues(section) {
   loadingEditor = true;
   suppressDirty = true;
+  actualizarPadres(section);
   byId("section-title").value = section?.titulo ?? "";
   byId("section-description").value = section?.descripcion ?? "";
   byId("section-menu").checked = section?.menu !== false;
@@ -108,6 +132,7 @@ function selectSection(section) {
   byId("save-explanation").textContent = section.tipo === "antigua"
     ? "Guardar actualiza el archivo de la página y sus ajustes en un único commit."
     : "Guardar actualiza el archivo Markdown de esta sección en un commit.";
+  newSubsectionButton.disabled = section.menu === false;
   deleteButton.hidden = section.tipo === "borrador";
   renderSectionList();
   setFormValues(section);
@@ -131,10 +156,16 @@ function renderSectionList() {
     const title = document.createElement("span");
     title.className = "section-choice-title";
     title.textContent = section.titulo || section.slug;
+    const parent = allSections.find((candidate) => candidate.slug === section.padre);
+    const parentLabel = document.createElement("span");
+    parentLabel.className = "section-choice-parent";
+    parentLabel.textContent = parent ? `Subsección de ${parent.titulo}` : "";
     const kind = document.createElement("span");
     kind.className = "section-choice-kind";
     kind.textContent = section.tipo === "antigua" ? "Antigua" : "Nueva";
-    copy.append(title, kind);
+    copy.append(title);
+    if (parent) copy.append(parentLabel);
+    copy.append(kind);
     button.append(numeral, copy);
     button.addEventListener("click", () => selectSection(section));
     sectionList.append(button);
@@ -254,6 +285,10 @@ connectionForm.addEventListener("submit", async (event) => {
 deleteButton.addEventListener("click", async () => {
   if (!client || !activeSection || activeSection.tipo === "borrador") return;
   const section = activeSection;
+  if (allSections.some((item) => item.padre === section.slug)) {
+    showStatus("Antes de borrar esta sección, asigna sus subsecciones a otra sección superior o déjalas como principales.", "error");
+    return;
+  }
   const message = isDirty
     ? `¿Borrar «${section.titulo}» de GitHub? También se descartarán los cambios sin guardar.`
     : `¿Borrar «${section.titulo}» de GitHub? Esta acción no se puede deshacer desde el editor.`;
@@ -274,6 +309,7 @@ deleteButton.addEventListener("click", async () => {
       byId("section-kind").textContent = "";
       editorSubtitle.textContent = "No hay secciones disponibles.";
       byId("save-explanation").textContent = "";
+      newSubsectionButton.disabled = true;
       renderSectionList();
     }
     showStatus(`Se ha borrado «${section.titulo}» de GitHub.`, "success");
@@ -310,6 +346,7 @@ sectionForm.addEventListener("submit", async (event) => {
       Object.assign(activeSection, saved, { html: values.html });
     }
     activeSection = saved;
+    newSubsectionButton.disabled = saved.menu === false;
     deleteButton.hidden = false;
     markDirty(false);
     renderSectionList();
@@ -326,9 +363,13 @@ sectionForm.addEventListener("submit", async (event) => {
   }
 });
 
-newSectionButton.addEventListener("click", () => {
+function crearBorrador(padre = "") {
   if (isDirty && !window.confirm("Hay cambios sin guardar. ¿Quieres descartarlos y crear una sección nueva?")) return;
-  const title = window.prompt("Título de la nueva sección:");
+  const seccionPadre = allSections.find((section) => section.slug === padre);
+  const tituloPrompt = seccionPadre
+    ? `Título de la subsección de «${seccionPadre.titulo}»:`
+    : "Título de la nueva sección:";
+  const title = window.prompt(tituloPrompt);
   if (title === null) return;
   if (!title.trim()) { showStatus("Escribe un título para la nueva sección.", "error"); return; }
   const base = slugFromTitle(title);
@@ -342,6 +383,7 @@ newSectionButton.addEventListener("click", () => {
     descripcion: "",
     fondo: null,
     menu: true,
+    padre,
     fecha: new Date().toISOString(),
     html: "<p>Escribe aquí el contenido de tu nueva sección.</p>",
     tipo: "borrador",
@@ -349,6 +391,7 @@ newSectionButton.addEventListener("click", () => {
   };
   allSections.push(draft);
   activeSection = draft;
+  newSubsectionButton.disabled = draft.menu === false;
   deleteButton.hidden = true;
   editorTitle.textContent = draft.titulo;
   byId("section-kind").textContent = "NUEVA SECCIÓN · BORRADOR";
@@ -357,6 +400,12 @@ newSectionButton.addEventListener("click", () => {
   renderSectionList();
   setFormValues(draft);
   showStatus("Borrador local. Todavía no se ha creado ningún archivo en GitHub.");
+}
+
+newSectionButton.addEventListener("click", () => crearBorrador());
+newSubsectionButton.addEventListener("click", () => {
+  if (!activeSection || activeSection.menu === false) return;
+  crearBorrador(activeSection.slug);
 });
 
 byId("section-search").addEventListener("input", renderSectionList);
@@ -364,7 +413,11 @@ customBackground.addEventListener("change", () => { updateBackgroundPreview(); m
 backgroundPicker.addEventListener("input", () => { updateBackgroundPreview(); markDirty(true); });
 byId("section-title").addEventListener("input", () => { if (!loadingEditor) { markDirty(true); if (activeSection) editorTitle.textContent = byId("section-title").value || "Sección sin título"; } });
 byId("section-description").addEventListener("input", () => markDirty(true));
-byId("section-menu").addEventListener("change", () => markDirty(true));
+byId("section-menu").addEventListener("change", () => {
+  markDirty(true);
+  newSubsectionButton.disabled = !activeSection || !byId("section-menu").checked;
+});
+byId("section-parent").addEventListener("change", () => markDirty(true));
 
 byId("reload-section-button").addEventListener("click", () => {
   if (!activeSection) return;
@@ -393,6 +446,7 @@ byId("disconnect-button").addEventListener("click", () => {
   connectionPanel.hidden = false;
   workspace.hidden = true;
   byId("github-token").value = "";
+  newSubsectionButton.disabled = true;
   markDirty(false);
   deleteButton.hidden = true;
   clearStatus();

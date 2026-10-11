@@ -87,6 +87,7 @@ test('el editor puede cargar las 45 secciones antiguas y el contenido de cada un
   const client = makeClient(mock);
   const loaded = await client.listSections((body) => `<p>${body}</p>`);
   const old = loaded.filter((item) => item.tipo === 'antigua');
+  assert.equal(loaded.find((item) => item.slug === 'noticias').padre, 'bienrecibidos');
   assert.equal(old.length, 45);
   assert.equal(new Set(old.map((item) => item.slug)).size, 45);
   for (const section of old) {
@@ -109,6 +110,7 @@ test('guardar una sección antigua genera un solo commit con contenido y metadat
     usarFondo: true,
     fondo: '#224466',
     menu: false,
+    padre: '10pokemon',
     html: nextHtml,
   });
   assert.equal(mock.createdTree.tree.length, 2);
@@ -122,9 +124,30 @@ test('guardar una sección antigua genera un solo commit con contenido y metadat
   assert.equal(saved.descripcion, 'Descripción de prueba');
   assert.equal(saved.fondo, '#224466');
   assert.equal(saved.menu, false);
+  assert.equal(saved.padre, '10pokemon');
   assert.equal(savedList.find((item) => item.slug === 'bienrecibidos').titulo, 'Bienrecibidos');
   assert.deepEqual(mock.createdCommit.parents, ['head-1']);
   assert.deepEqual(mock.patchedRef, { sha: 'commit-created', force: false });
+});
+
+test('editar una sección permite devolverla al nivel principal', async () => {
+  const mock = new SimulatedGitHub();
+  await mock.initialize();
+  const client = makeClient(mock);
+  const loaded = await client.listSections();
+  const target = loaded.find((item) => item.slug === 'noticias');
+  await client.saveSection(target, {
+    titulo: target.titulo,
+    descripcion: target.descripcion,
+    usarFondo: false,
+    fondo: '#000000',
+    menu: true,
+    padre: '',
+    html: target.html,
+  });
+
+  const manifest = JSON.parse(mock.createdTree.tree.find((item) => item.path === 'src/secciones.json').content);
+  assert.equal(Object.hasOwn(manifest.find((item) => item.slug === 'noticias'), 'padre'), false);
 });
 
 test('borrar una sección antigua elimina su HTML y metadatos en un commit', async () => {
@@ -201,6 +224,7 @@ test('crear una sección nueva guarda el Markdown con cabecera YAML sin cambiar 
     usarFondo: true,
     fondo: '#123456',
     menu: true,
+    padre: 'bienrecibidos',
     html: '<p>Contenido con <strong>formato</strong>.</p>',
   });
   assert.equal(mock.createdTree.tree.length, 1);
@@ -210,6 +234,7 @@ test('crear una sección nueva guarda el Markdown con cabecera YAML sin cambiar 
   assert.equal(parsed.metadata.titulo, 'Prueba nueva: Ñandú');
   assert.equal(parsed.metadata.fondo, '#123456');
   assert.equal(parsed.metadata.menu, true);
+  assert.equal(parsed.metadata.padre, 'bienrecibidos');
   assert.equal(parsed.body.trim(), '<p>Contenido con <strong>formato</strong>.</p>');
   assert.equal(mock.patchedRef.sha, 'commit-created');
   assert.equal(mock.createdTree.tree.some((item) => item.path === 'src/secciones.json'), false);
