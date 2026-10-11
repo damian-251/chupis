@@ -145,7 +145,7 @@ main :where(h2) { font-size: 1.6rem; }
 main :where(h3) { font-size: 1.3rem; }
 main :where(ul, ol) { margin-block: 0 1em; padding-inline-start: 1.5rem; }
 main blockquote { margin: 0 0 1em; padding-inline: 1rem; border-inline-start: 3px solid currentColor; }
-main :where(p, ul, ol, blockquote, h2, h3) { max-inline-size: 60rem; }
+main :where(p, ul, ol, blockquote, h2, h3) { max-inline-size: 60rem; margin-inline: auto; }
 
 /* Tablas de noticias */
 .desplazable { overflow-x: auto; margin-block-end: 1em; }

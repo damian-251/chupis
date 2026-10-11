@@ -11,6 +11,7 @@ const editorTitle = byId("editor-title");
 const editorSubtitle = byId("editor-subtitle");
 const dirtyIndicator = byId("dirty-indicator");
 const saveButton = byId("save-button");
+const deleteButton = byId("delete-section-button");
 const newSectionButton = byId("new-section-button");
 const backgroundPicker = byId("section-background");
 const customBackground = byId("use-custom-background");
@@ -107,6 +108,7 @@ function selectSection(section) {
   byId("save-explanation").textContent = section.tipo === "antigua"
     ? "Guardar actualiza el archivo de la página y sus ajustes en un único commit."
     : "Guardar actualiza el archivo Markdown de esta sección en un commit.";
+  deleteButton.hidden = section.tipo === "borrador";
   renderSectionList();
   setFormValues(section);
 }
@@ -151,6 +153,7 @@ async function initializeEditor() {
   if (!window.marked?.parse) throw new Error("No se pudo cargar el conversor Markdown. Comprueba tu conexión y recarga la página.");
   const created = await window.tinymce.init({
     selector: "#content",
+    document_base_url: `https://raw.githubusercontent.com/${encodeURIComponent(client.owner)}/${encodeURIComponent(client.repo)}/${client.branch.split("/").map(encodeURIComponent).join("/")}/public/`,
     height: 570,
     min_height: 440,
     menubar: "edit view insert format tools table",
@@ -229,20 +232,55 @@ connectionForm.addEventListener("submit", async (event) => {
   button.disabled = true;
   button.textContent = "Conectando…";
   try {
-    if (!editor) await initializeEditor();
     client = new GitHubClient({
       owner: byId("github-owner").value,
       repo: byId("github-repo").value,
       branch: byId("github-branch").value,
       token: byId("github-token").value,
     });
+    if (!editor) await initializeEditor();
     await loadAllSections();
   } catch (error) {
     client = null;
+    editor?.remove();
+    editor = null;
     showStatus(error.message || String(error), "error");
   } finally {
     button.disabled = false;
     button.textContent = "Conectar y cargar secciones";
+  }
+});
+
+deleteButton.addEventListener("click", async () => {
+  if (!client || !activeSection || activeSection.tipo === "borrador") return;
+  const section = activeSection;
+  const message = isDirty
+    ? `¿Borrar «${section.titulo}» de GitHub? También se descartarán los cambios sin guardar.`
+    : `¿Borrar «${section.titulo}» de GitHub? Esta acción no se puede deshacer desde el editor.`;
+  if (!window.confirm(message)) return;
+  deleteButton.disabled = true;
+  showStatus("Borrando la sección de GitHub…");
+  try {
+    await client.deleteSection(section);
+    allSections = allSections.filter((item) => item.id !== section.id);
+    activeSection = null;
+    markDirty(false);
+    if (allSections.length) {
+      selectSection(allSections[0]);
+    } else {
+      deleteButton.hidden = true;
+      setFormValues(null);
+      editorTitle.textContent = "Elige una sección";
+      byId("section-kind").textContent = "";
+      editorSubtitle.textContent = "No hay secciones disponibles.";
+      byId("save-explanation").textContent = "";
+      renderSectionList();
+    }
+    showStatus(`Se ha borrado «${section.titulo}» de GitHub.`, "success");
+  } catch (error) {
+    showStatus(error.message || String(error), "error");
+  } finally {
+    deleteButton.disabled = false;
   }
 });
 
@@ -272,6 +310,7 @@ sectionForm.addEventListener("submit", async (event) => {
       Object.assign(activeSection, saved, { html: values.html });
     }
     activeSection = saved;
+    deleteButton.hidden = false;
     markDirty(false);
     renderSectionList();
     editorTitle.textContent = saved.titulo;
@@ -310,6 +349,7 @@ newSectionButton.addEventListener("click", () => {
   };
   allSections.push(draft);
   activeSection = draft;
+  deleteButton.hidden = true;
   editorTitle.textContent = draft.titulo;
   byId("section-kind").textContent = "NUEVA SECCIÓN · BORRADOR";
   editorSubtitle.textContent = `Se creará ${draft.path} al guardar.`;
@@ -346,12 +386,15 @@ byId("reload-section-button").addEventListener("click", () => {
 byId("disconnect-button").addEventListener("click", () => {
   if (isDirty && !window.confirm("Tienes cambios sin guardar. ¿Quieres desconectarte y descartarlos?")) return;
   client = null;
+  editor?.remove();
+  editor = null;
   allSections = [];
   activeSection = null;
   connectionPanel.hidden = false;
   workspace.hidden = true;
   byId("github-token").value = "";
   markDirty(false);
+  deleteButton.hidden = true;
   clearStatus();
 });
 

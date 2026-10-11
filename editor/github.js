@@ -94,7 +94,12 @@ export class GitHubClient {
     }
     if (!response.ok) {
       const detail = result.message || response.statusText || "Error desconocido";
-      const error = new Error(`GitHub (${response.status}): ${detail}`);
+      const hint = response.status === 401
+        ? " Comprueba que el token sea válido y no haya caducado."
+        : response.status === 403 && /permission|resource not accessible|forbidden/i.test(detail)
+          ? " Comprueba que el token tenga acceso al repositorio y permiso de lectura y escritura en Contents."
+          : "";
+      const error = new Error(`GitHub (${response.status}): ${detail}.${hint}`);
       error.status = response.status;
       throw error;
     }
@@ -201,6 +206,24 @@ export class GitHubClient {
     return { ...section, id: `new:${slug}`, tipo: "nueva", path: filePath, html: values.html };
   }
 
+  async deleteSection(section) {
+    if (section.tipo === "antigua") {
+      const sectionsPath = "src/secciones.json";
+      const latestSections = JSON.parse(await this.readText(sectionsPath));
+      const remainingSections = latestSections.filter((item) => item.slug !== section.slug);
+      if (remainingSections.length === latestSections.length) {
+        throw new Error(`La sección «${section.slug}» ya no aparece en src/secciones.json. Recarga la lista antes de borrarla.`);
+      }
+      await this.commitFiles([
+        { path: `src/paginas/${section.slug}.html`, delete: true },
+        { path: sectionsPath, content: `${JSON.stringify(remainingSections, null, 2)}\n` },
+      ], `Borrar sección: ${section.titulo}`);
+      return;
+    }
+    if (section.tipo !== "nueva") throw new Error("Solo se pueden borrar secciones guardadas.");
+    await this.commitFiles([{ path: section.path, delete: true }], `Borrar sección: ${section.titulo}`);
+  }
+
   async uploadImage(file) {
     if (!(file instanceof Blob)) throw new Error("No se ha seleccionado un archivo de imagen válido.");
     if (file.size > 5 * 1024 * 1024) throw new Error("La imagen pesa más de 5 MB. Reduce su tamaño e inténtalo de nuevo.");
@@ -237,7 +260,9 @@ export class GitHubClient {
       method: "POST",
       body: JSON.stringify({
         base_tree: parent.tree.sha,
-        tree: files.map((file) => ({ path: file.path, mode: "100644", type: "blob", content: file.content })),
+        tree: files.map((file) => file.delete
+          ? { path: file.path, mode: "100644", type: "blob", sha: null }
+          : { path: file.path, mode: "100644", type: "blob", content: file.content }),
       }),
     });
     const commit = await this.request("/git/commits", {

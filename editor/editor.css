@@ -44,6 +44,8 @@ input:disabled { cursor: not-allowed; opacity: .55; }
 .button.primary:hover:not(:disabled) { background: var(--purple-dark); }
 .button.secondary { color: #493d58; background: #fff; border-color: #dcd5e5; }
 .button.secondary:hover:not(:disabled) { background: #f7f3fb; }
+.button.danger { color: #8f2a2a; background: #fff; border-color: #edc5c2; }
+.button.danger:hover:not(:disabled) { background: #fff1f0; }
 .button.compact { min-height: 34px; padding: 0 12px; }
 .help-note { margin-top: 24px; padding-top: 17px; border-top: 1px solid #f0edf3; color: var(--muted); font-size: 12px; }
 .help-note summary { color: #5c5269; font-weight: 700; cursor: pointer; }
