@@ -15,6 +15,7 @@ const deleteButton = byId("delete-section-button");
 const newSectionButton = byId("new-section-button");
 const newSubsectionButton = byId("new-subsection-button");
 const backgroundPicker = byId("section-background");
+const backgroundHex = byId("section-background-hex");
 const customBackground = byId("use-custom-background");
 
 let client = null;
@@ -24,6 +25,7 @@ let editor = null;
 let isDirty = false;
 let loadingEditor = false;
 let suppressDirty = false;
+let savingSectionOrder = false;
 
 function showStatus(message, kind = "info") {
   globalStatus.textContent = message;
@@ -53,12 +55,17 @@ function contrastInk(hex) {
 function updateBackgroundPreview() {
   const isCustom = customBackground.checked;
   backgroundPicker.disabled = !isCustom;
-  const background = isCustom ? backgroundPicker.value : "#000000";
-  byId("background-value").textContent = isCustom ? background.toUpperCase() : "Fondo predeterminado · negro";
-  const ink = contrastInk(background);
-  if (editor?.getBody()) {
+  backgroundHex.disabled = !isCustom;
+  const hex = backgroundHex.value.trim();
+  const validHex = /^#[\da-f]{6}$/i.test(hex);
+  backgroundHex.setCustomValidity(isCustom && !validHex ? "Escribe un color hexadecimal válido, por ejemplo #663399." : "");
+  const background = isCustom ? (validHex ? hex.toLowerCase() : null) : "#000000";
+  byId("background-value").textContent = isCustom
+    ? (validHex ? background.toUpperCase() : "Código hexadecimal no válido")
+    : "Fondo predeterminado · negro";
+  if (background && editor?.getBody()) {
     editor.getBody().style.backgroundColor = background;
-    editor.getBody().style.color = ink;
+    editor.getBody().style.color = contrastInk(background);
   }
 }
 
@@ -68,7 +75,7 @@ function readFormValues() {
     titulo: byId("section-title").value,
     descripcion: byId("section-description").value,
     usarFondo: customBackground.checked,
-    fondo: backgroundPicker.value,
+    fondo: backgroundHex.value.trim(),
     menu: byId("section-menu").checked,
     padre: byId("section-parent").value,
     html: content,
@@ -106,6 +113,7 @@ function setFormValues(section) {
   const custom = Boolean(section?.fondo && section.fondo.toLowerCase() !== "#000000");
   customBackground.checked = custom;
   backgroundPicker.value = custom ? section.fondo : "#000000";
+  backgroundHex.value = custom ? section.fondo : "#000000";
   updateBackgroundPreview();
   if (editor) {
     editor.setContent(section?.html || "<p></p>");
@@ -143,7 +151,11 @@ function renderSectionList() {
   const filtered = allSections.filter((section) => `${section.titulo} ${section.slug}`.toLocaleLowerCase("es").includes(filter));
   byId("section-count").textContent = `${filtered.length} de ${allSections.length} secciones`;
   sectionList.replaceChildren();
-  for (const [index, section] of filtered.entries()) {
+  for (const section of filtered) {
+    const siblings = allSections.filter((candidate) => (candidate.padre || "") === (section.padre || ""));
+    const siblingIndex = siblings.indexOf(section);
+    const row = document.createElement("div");
+    row.className = "section-row";
     const button = document.createElement("button");
     button.type = "button";
     button.className = "section-choice";
@@ -168,7 +180,24 @@ function renderSectionList() {
     copy.append(kind);
     button.append(numeral, copy);
     button.addEventListener("click", () => selectSection(section));
-    sectionList.append(button);
+    const moveUp = document.createElement("button");
+    moveUp.type = "button";
+    moveUp.className = "section-reorder";
+    moveUp.textContent = "↑";
+    moveUp.title = `Subir «${section.titulo}» entre sus secciones del mismo nivel`;
+    moveUp.setAttribute("aria-label", moveUp.title);
+    moveUp.disabled = savingSectionOrder || siblingIndex === 0;
+    moveUp.addEventListener("click", () => moveSection(section, -1));
+    const moveDown = document.createElement("button");
+    moveDown.type = "button";
+    moveDown.className = "section-reorder";
+    moveDown.textContent = "↓";
+    moveDown.title = `Bajar «${section.titulo}» entre sus secciones del mismo nivel`;
+    moveDown.setAttribute("aria-label", moveDown.title);
+    moveDown.disabled = savingSectionOrder || siblingIndex === siblings.length - 1;
+    moveDown.addEventListener("click", () => moveSection(section, 1));
+    row.append(button, moveUp, moveDown);
+    sectionList.append(row);
   }
   if (!filtered.length) {
     const empty = document.createElement("p");
@@ -176,6 +205,31 @@ function renderSectionList() {
     empty.style.cssText = "padding:10px;font-size:12px";
     empty.textContent = "No hay secciones que coincidan con la búsqueda.";
     sectionList.append(empty);
+  }
+}
+
+async function moveSection(section, direction) {
+  if (!client || savingSectionOrder) return;
+  const siblings = allSections.filter((candidate) => (candidate.padre || "") === (section.padre || ""));
+  const siblingIndex = siblings.indexOf(section);
+  const target = siblings[siblingIndex + direction];
+  if (!target) return;
+  const previousOrder = [...allSections];
+  const currentIndex = allSections.indexOf(section);
+  const targetIndex = allSections.indexOf(target);
+  [allSections[currentIndex], allSections[targetIndex]] = [allSections[targetIndex], allSections[currentIndex]];
+  savingSectionOrder = true;
+  renderSectionList();
+  showStatus("Guardando el orden de las secciones en GitHub…");
+  try {
+    await client.saveSectionOrder(allSections);
+    showStatus("Se ha guardado el nuevo orden de las secciones.", "success");
+  } catch (error) {
+    allSections = previousOrder;
+    showStatus(error.message || String(error), "error");
+  } finally {
+    savingSectionOrder = false;
+    renderSectionList();
   }
 }
 
@@ -338,9 +392,8 @@ sectionForm.addEventListener("submit", async (event) => {
       const slug = activeSection.slug;
       const draftId = activeSection.id;
       if (allSections.some((section) => section.id !== draftId && section.slug === slug)) throw new Error(`Ya existe una sección con la dirección «${slug}». Cambia el título para crear otra.`);
-      saved = await client.createSection({ ...values, slug });
-      allSections = allSections.filter((section) => section.id !== draftId);
-      allSections.push(saved);
+      saved = await client.createSection({ ...values, slug, orden: allSections.map((section) => section.slug) });
+      allSections[allSections.findIndex((section) => section.id === draftId)] = saved;
     } else {
       saved = await client.saveSection(activeSection, values);
       Object.assign(activeSection, saved, { html: values.html });
@@ -410,7 +463,16 @@ newSubsectionButton.addEventListener("click", () => {
 
 byId("section-search").addEventListener("input", renderSectionList);
 customBackground.addEventListener("change", () => { updateBackgroundPreview(); markDirty(true); });
-backgroundPicker.addEventListener("input", () => { updateBackgroundPreview(); markDirty(true); });
+backgroundPicker.addEventListener("input", () => {
+  backgroundHex.value = backgroundPicker.value.toLowerCase();
+  updateBackgroundPreview();
+  markDirty(true);
+});
+backgroundHex.addEventListener("input", () => {
+  if (/^#[\da-f]{6}$/i.test(backgroundHex.value.trim())) backgroundPicker.value = backgroundHex.value.trim().toLowerCase();
+  updateBackgroundPreview();
+  markDirty(true);
+});
 byId("section-title").addEventListener("input", () => { if (!loadingEditor) { markDirty(true); if (activeSection) editorTitle.textContent = byId("section-title").value || "Sección sin título"; } });
 byId("section-description").addEventListener("input", () => markDirty(true));
 byId("section-menu").addEventListener("change", () => {

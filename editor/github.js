@@ -1,4 +1,5 @@
 const API_ROOT = "https://api.github.com";
+const SECTION_ORDER_PATH = "src/orden-secciones.json";
 
 function encodePath(path) {
   return path.split("/").map((part) => encodeURIComponent(part)).join("/");
@@ -54,6 +55,29 @@ export function serializeMarkdownDocument(section, html) {
     `fecha: ${JSON.stringify(fecha)}`,
   ];
   return `---\n${lines.join("\n")}\n---\n\n${html.trim()}\n`;
+}
+
+export function applySectionOrder(sections, order) {
+  const sectionsBySlug = new Map(sections.map((section) => [section.slug, section]));
+  const ordered = [];
+  const seen = new Set();
+  for (const slug of order) {
+    const section = sectionsBySlug.get(slug);
+    if (section && !seen.has(slug)) {
+      ordered.push(section);
+      seen.add(slug);
+    }
+  }
+  return [...ordered, ...sections.filter((section) => !seen.has(section.slug))];
+}
+
+function backgroundFromValues(values) {
+  if (!values.usarFondo) return null;
+  if (!/^#[\da-f]{6}$/i.test(values.fondo)) {
+    throw new Error("El color de fondo debe ser un código hexadecimal de seis dígitos, por ejemplo #663399.");
+  }
+  const normalized = values.fondo.toLowerCase();
+  return normalized === "#000000" ? null : normalized;
 }
 
 export function slugFromTitle(title) {
@@ -152,11 +176,22 @@ export class GitHubClient {
       };
     }));
     newSections.sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)) || a.slug.localeCompare(b.slug, "es"));
-    return [...legacySections, ...newSections];
+    const sections = [...legacySections, ...newSections];
+    let order = [];
+    try {
+      const rawOrder = JSON.parse(await this.readText(SECTION_ORDER_PATH));
+      if (!Array.isArray(rawOrder) || rawOrder.some((slug) => typeof slug !== "string")) {
+        throw new Error(`El archivo ${SECTION_ORDER_PATH} debe contener una lista de direcciones de sección.`);
+      }
+      order = rawOrder;
+    } catch (error) {
+      if (error.status !== 404) throw error;
+    }
+    return applySectionOrder(sections, order);
   }
 
   async saveSection(current, values) {
-    const fondo = values.usarFondo && values.fondo.toLowerCase() !== "#000000" ? values.fondo.toLowerCase() : null;
+    const fondo = backgroundFromValues(values);
     const section = {
       ...current,
       titulo: values.titulo.trim(),
@@ -198,19 +233,32 @@ export class GitHubClient {
   async createSection(values) {
     const slug = values.slug;
     const filePath = `src/nuevas/${slug}.md`;
+    const fondo = backgroundFromValues(values);
     const section = {
       slug,
       titulo: values.titulo.trim(),
       descripcion: values.descripcion.trim() || values.titulo.trim(),
-      fondo: values.usarFondo && values.fondo.toLowerCase() !== "#000000" ? values.fondo.toLowerCase() : null,
+      fondo,
       menu: values.menu,
       padre: values.padre || "",
       fecha: new Date().toISOString(),
     };
     if (!section.titulo) throw new Error("El título es obligatorio.");
     const markdown = serializeMarkdownDocument(section, values.html);
-    await this.commitFiles([{ path: filePath, content: markdown }], `Crear sección: ${section.titulo}`);
+    const files = [{ path: filePath, content: markdown }];
+    if (Array.isArray(values.orden)) {
+      files.push({ path: SECTION_ORDER_PATH, content: `${JSON.stringify(values.orden, null, 2)}\n` });
+    }
+    await this.commitFiles(files, `Crear sección: ${section.titulo}`);
     return { ...section, id: `new:${slug}`, tipo: "nueva", path: filePath, html: values.html };
+  }
+
+  async saveSectionOrder(sections) {
+    const order = sections.map((section) => section.slug);
+    if (new Set(order).size !== order.length) throw new Error("No se puede guardar el orden porque hay direcciones de sección duplicadas.");
+    await this.commitFiles([
+      { path: SECTION_ORDER_PATH, content: `${JSON.stringify(order, null, 2)}\n` },
+    ], "Reordenar secciones");
   }
 
   async deleteSection(section) {

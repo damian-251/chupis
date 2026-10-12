@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { marked } from "marked";
 import { parse as parseYaml } from "yaml";
+import { applySectionOrder } from "./editor/github.js";
 import { pagina, portada, noEncontrada, redireccion, escapar } from "./src/plantilla.mjs";
 
 const aqui = path.dirname(fileURLToPath(import.meta.url));
@@ -44,7 +45,17 @@ for (const archivo of (await readdir(path.join(aqui, "src/nuevas"))).filter((f) 
   });
 }
 nuevas.sort((a, b) => a.fecha - b.fecha);
-secciones.push(...nuevas);
+let orden = [];
+try {
+  orden = JSON.parse(await readFile(path.join(aqui, "src/orden-secciones.json"), "utf8"));
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
+if (!Array.isArray(orden) || orden.some((slug) => typeof slug !== "string")) {
+  throw new Error("src/orden-secciones.json debe contener una lista de direcciones de sección.");
+}
+const seccionesOrdenadas = applySectionOrder([...secciones, ...nuevas], orden);
+secciones.splice(0, secciones.length, ...seccionesOrdenadas);
 
 const seccionesPorSlug = new Map(secciones.map((seccion) => [seccion.slug, seccion]));
 for (const seccion of secciones) {
