@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   GitHubClient,
+  applySectionOrder,
   decodeBase64Utf8,
   encodeBase64Utf8,
   parseMarkdownDocument,
@@ -95,6 +96,27 @@ test('el editor puede cargar las 45 secciones antiguas y el contenido de cada un
     assert.equal(section.path, `src/paginas/${section.slug}.html`);
   }
   assert.ok(mock.requests.filter((r) => r.route.startsWith('/contents/src/paginas/')).length >= 45);
+});
+
+test('el orden guardado incluye secciones antiguas y nuevas y se aplica al volver a cargar', async () => {
+  const mock = new SimulatedGitHub();
+  await mock.initialize();
+  const client = makeClient(mock);
+  const loaded = await client.listSections();
+  const reordered = [...loaded].reverse();
+
+  await client.saveSectionOrder(reordered);
+  const entry = mock.createdTree.tree.find((item) => item.path === 'src/orden-secciones.json');
+  assert.deepEqual(JSON.parse(entry.content), reordered.map((section) => section.slug));
+
+  mock.files.set('src/orden-secciones.json', entry.content);
+  const reloaded = await client.listSections();
+  assert.deepEqual(reloaded.map((section) => section.slug), reordered.map((section) => section.slug));
+});
+
+test('el orden solo desplaza secciones existentes y conserva al final las que no tienen posición explícita', () => {
+  const sections = [{ slug: 'uno' }, { slug: 'dos' }, { slug: 'tres' }];
+  assert.deepEqual(applySectionOrder(sections, ['tres', 'desconocida', 'tres']), [sections[2], sections[0], sections[1]]);
 });
 
 test('guardar una sección antigua genera un solo commit con contenido y metadatos, sin alterar las otras 44', async () => {
@@ -227,6 +249,7 @@ test('crear una sección nueva guarda el Markdown con cabecera YAML sin cambiar 
     padre: 'bienrecibidos',
     html: '<p>Contenido con <strong>formato</strong>.</p>',
   });
+
   assert.equal(mock.createdTree.tree.length, 1);
   const entry = mock.createdTree.tree[0];
   assert.equal(entry.path, 'src/nuevas/prueba-nueva.md');
@@ -238,6 +261,43 @@ test('crear una sección nueva guarda el Markdown con cabecera YAML sin cambiar 
   assert.equal(parsed.body.trim(), '<p>Contenido con <strong>formato</strong>.</p>');
   assert.equal(mock.patchedRef.sha, 'commit-created');
   assert.equal(mock.createdTree.tree.some((item) => item.path === 'src/secciones.json'), false);
+});
+
+test('guardar color de fondo hexadecimal no válido se rechaza antes de crear un commit', async () => {
+  const mock = new SimulatedGitHub();
+  await mock.initialize();
+  const client = makeClient(mock);
+  await assert.rejects(() => client.createSection({
+    slug: 'color-invalido',
+    titulo: 'Color inválido',
+    usarFondo: true,
+    fondo: '#12xx56',
+    html: '<p>Prueba</p>',
+  }), /código hexadecimal de seis dígitos/);
+  assert.equal(mock.createdTree, null);
+});
+
+test('crear una sección guarda su orden junto con el archivo Markdown', async () => {
+  const mock = new SimulatedGitHub();
+  await mock.initialize();
+  const client = makeClient(mock);
+  const order = ['bienrecibidos', 'nueva-seccion', 'noticias'];
+  await client.createSection({
+    slug: 'nueva-seccion',
+    titulo: 'Nueva sección',
+    descripcion: '',
+    usarFondo: false,
+    fondo: '#000000',
+    menu: true,
+    html: '<p>Contenido</p>',
+    orden: order,
+  });
+
+  assert.deepEqual(mock.createdTree.tree.map((file) => file.path).sort(), [
+    'src/nuevas/nueva-seccion.md',
+    'src/orden-secciones.json',
+  ]);
+  assert.deepEqual(JSON.parse(mock.createdTree.tree.find((file) => file.path === 'src/orden-secciones.json').content), order);
 });
 
 test('subir una imagen a GitHub usa una ruta segura y rechaza SVG y archivos grandes', async () => {
