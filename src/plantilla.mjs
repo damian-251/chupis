@@ -157,7 +157,8 @@ export const portada = () => `
   <div class="libro">
     <iframe src="https://guestbooks.meadow.cafe/guestbook/6290" title="Libro de visitas" loading="lazy"></iframe>
   </div>
-  <div class="contador-visitas" aria-label="Contador de visitas">
+  <div class="contador-visitas">
+    <p class="contador-visitas-mensaje">Eres el visitante número...</p>
     <div align=center><a href='https://www.counter12.com'><img src='https://www.counter12.com/img-xd2Dz5bd564x8Db3-38.gif' border='0' alt='free counter'></a><script type='text/javascript' src='https://www.counter12.com/ad.js?id=xd2Dz5bd564x8Db3'></script></div>
   </div>
   <footer class="ai-disclaimer">
