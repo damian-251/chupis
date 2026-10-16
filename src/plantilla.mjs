@@ -157,6 +157,10 @@ export const portada = () => `
   <div class="libro">
     <iframe src="https://guestbooks.meadow.cafe/guestbook/6290" title="Libro de visitas" loading="lazy"></iframe>
   </div>
+  <div class="contador-visitas" aria-label="Contador de visitas">
+    <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1669219/t/5"></script>
+    <a href="https://www.counter-zaehler.de">Counter-Zähler.de</a>
+  </div>
   <footer class="ai-disclaimer">
     <p class="ai-disclaimer-titulo">Sobre el uso de Inteligencia Artificial en este proyecto</p>
     <p>Este sitio es una versión restaurada de Chupis, una antigua página de MSN Groups. La estructura y el diseño, que imitan al sitio original, fueron generados con asistencia de Inteligencia Artificial. Tanto el contenido original como el nuevo han sido creados y extraídos de forma manual.</p>

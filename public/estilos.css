@@ -187,6 +187,10 @@ main a.boton { color: #fff; &:hover { color: #000; } }
   iframe { display: block; inline-size: 100%; block-size: 600px; border: 1px solid #e0e0e0; border-radius: 8px; }
 }
 
+.contador-visitas {
+  margin: 3rem auto 5rem;
+  text-align: center;
+}
 
 .ai-disclaimer {
   margin-top: 3rem;
