@@ -191,6 +191,11 @@ main a.boton { color: #fff; &:hover { color: #000; } }
   margin: 3rem auto 5rem;
   text-align: center;
 }
+.contador-visitas-mensaje {
+  margin-block: 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
 
 .ai-disclaimer {
   margin-top: 3rem;
