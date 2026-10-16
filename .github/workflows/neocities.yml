@@ -27,7 +27,7 @@ jobs:
         run: npm ci && npm run build
 
       - name: Subir dist/ a Neocities
-        uses: bcomnes/deploy-to-neocities@v3
+        uses: bcomnes/deploy-to-neocities@44e42387b3267e31432ca34b01f013b94956f2f2 # v3
         with:
           api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
           dist_dir: dist
