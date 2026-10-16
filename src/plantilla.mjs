@@ -158,9 +158,7 @@ export const portada = () => `
     <iframe src="https://guestbooks.meadow.cafe/guestbook/6290" title="Libro de visitas" loading="lazy"></iframe>
   </div>
   <div class="contador-visitas" aria-label="Contador de visitas">
-    <a href='https://www.versicherungen.at/pflegevorsorge/'>Pflege Vorsorge</a>
-    <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=501756d6d9edb61b9a00aa3e9d0ec4286360413d'></script>
-    <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1669221/t/5"></script>
+    <div align=center><a href='https://www.counter12.com'><img src='https://www.counter12.com/img-xd2Dz5bd564x8Db3-38.gif' border='0' alt='free counter'></a><script type='text/javascript' src='https://www.counter12.com/ad.js?id=xd2Dz5bd564x8Db3'></script></div>
   </div>
   <footer class="ai-disclaimer">
     <p class="ai-disclaimer-titulo">Sobre el uso de Inteligencia Artificial en este proyecto</p>
